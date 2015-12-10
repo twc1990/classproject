@@ -2,8 +2,6 @@
 
 import random
 
-
-
 def generator():
 	password=""
 	var = input("Please enter a positive integer for password length: ")
