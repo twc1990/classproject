@@ -1,6 +1,6 @@
+#!/bin/python
+
 import random
-
-
 
 def generator():
 	password=""
