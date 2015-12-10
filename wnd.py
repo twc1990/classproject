@@ -7,10 +7,6 @@ def quit_and(w, *fns):
             fn()
     w.destroy()
 
-def submit_button(wnd, fn, val):
-    fn(val)
-    wnd.destroy()
-
 def initial_password(submit):
     wnd = Tk()
     wnd.title("Initial Configuration")
@@ -161,4 +157,4 @@ def main_view(pwmap, pwmodify, options):
     wnd.mainloop()
 
 #initial_password(lambda x: print(str(x)))
-main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
+#main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
