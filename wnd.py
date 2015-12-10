@@ -97,8 +97,8 @@ def delete_pw(pwmap, modify, key):
     wnd.title("Warning")
     frame = Frame(wnd)
     lbl = Label(frame, text="Password data for " + key + " will be lost permanently. Are you sure you want to delete " + key + " password?")
-    yes = Button(frame, text="Confirm", command=lambda: quit_and(lambda: modify(key, ""), lambda: pwmap.pop(key)))
-    no = Button(frame, text="Cancel", command=lambda: quit_and())
+    yes = Button(frame, text="Confirm", command=lambda w=wnd: quit_and(w, lambda: modify(key, ""), lambda: pwmap.pop(key)))
+    no = Button(frame, text="Cancel", command=lambda w=wnd: quit_and(w))
 
     frame.grid(column=0, row=0)
     lbl.grid(column=0, row=0, columnspan=2)
@@ -114,6 +114,16 @@ def main_update(window, table, passwords):
                 if key == k:
                     raise(DeepBreak)
             table.insert(END, key)
+        except:
+            pass
+
+    for key in table.get(0, END):
+        try:
+            for k in passwords.keys():
+                if key == k:
+                    raise(DeepBreak)
+            print("Nooooo!")
+            table.delete(table.curselection())
         except:
             pass
 
@@ -151,4 +161,4 @@ def main_view(pwmap, pwmodify, options):
     wnd.mainloop()
 
 #initial_password(lambda x: print(str(x)))
-main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(y + ": " + x[y]), lambda x: print("Options!"))
+main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
