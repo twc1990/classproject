@@ -60,16 +60,13 @@ def runGen(size, generator, ends):
     return password
             
             
-def cryptTest():
-    key = SHA256.new()
-    key.update(b'password')
-    key=key.digest()
+def cryptTest(password):
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
-    #key = ''
-    #salt = os.urandom(32)
-    #key = PBKDF2(password, salt, dkLen=32, count=iterations)
+    key = ''
+    salt = os.urandom(64)
+    key = PBKDF2(password, salt, dkLen=32, count=iterations)
     #key=key.digest()
     encryptor = AES.new(key, AES.MODE_CBC, iv)
     testEnc=encryptor
@@ -81,6 +78,7 @@ def cryptTest():
             outfile.write(struct.pack('<Q', filesize))
             ivencode = iv.encode('utf-8')
             outfile.write(ivencode)
+            outfile.write(salt)
             while True:
                 chunk = infile.read(chunksize)
                 if len(chunk) == 0:
@@ -89,15 +87,17 @@ def cryptTest():
                     chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
                 outfile.write(encryptor.encrypt(chunk))
 #encrypt_file(key, "pas.txt")
-def decrTest():
+def decrTest(password):
     testPass=False
     chunksize=24*1024
-    key = SHA256.new()
-    key.update(b'password')
-    key=key.digest()
+    iterations = 5000
+    key = ''
+    #key=key.digest()
     with open('pas.enc', 'rb') as infile:
         origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
         iv = infile.read(16)
+        salt=infile.read(64)
+        key = PBKDF2(password, salt, dkLen=32, count=iterations)
         decryptor = AES.new(key, AES.MODE_CBC, iv)
         pasTest=decryptor
         with open('test.enc', 'rb') as testfile:
@@ -105,7 +105,7 @@ def decrTest():
                 test=testfile.read(chunksize)
                 if len(test)==0:
                     break
-                m=""+pasTest.decrypt(test).decode()
+                m=pasTest.decrypt(test).decode()
                 if m==passPhrase:
                     testPass=True
         print(testPass)
@@ -117,7 +117,7 @@ def decrTest():
                         break
                     outfile.write(decryptor.decrypt(chunk))
 
-                outfile.truncate(origsize)
+                #outfile.truncate(origsize)
                 return True
         else:
             return False
