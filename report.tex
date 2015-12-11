@@ -1,0 +1,62 @@
+\documentclass [oneside, letterpaper] {article}
+
+\usepackage {microtype}
+
+\title {Password Manager}
+\author {Theodore Contes \and A. Connor Waters}
+\date{}
+
+\begin {document}
+    \maketitle
+
+    \section {Introduction}
+        Good passwords are a critical part of keeping information secure in the
+        current day, but maintaining good passwords is becoming more difficult
+        every day. Not only do you need long, complex passwords to defeat
+        standard attacks, such as dictionary attacks or brute force methods, but
+        you need multiple such passwords. Password reuse leaves oneself open to
+        having multiple accounts and services vulnerable if any password is
+        compromised. But the alternative is to memorize many passwords, and then
+        memorize new ones when you need to change those passwords. For many,
+        this is not a practical solution, and so they instead leave themselves
+        open to attacks through weak passwords and password reuse. 
+
+        This project aims to provide a solution to the problem, by allowing a
+        user to memorize a single strong password, and then store the rest of
+        their password information behind this password. The password manager
+        will create and store passwords in encrypted files, allowing the user to
+        access them but not others.
+
+        Password managers do have some weaknesses; inherently they rely on a
+        single password to protect all of the other passwords, thus introducing
+        a single point of failure. If the single password is compromised then
+        all of the passwords and accounts stored within the manager are at risk.
+        Alternatively, if the access to the password manager is lost, then the
+        user has just lost access to all of their accounts. This can be
+        mitigated through backups and storing the information and encryption
+        keys on multiple computers, though this is not perfect. Finally,
+        password managers cannot be used for all passwords, if only because they
+        are stored on computers: to access the password manager you must first
+        be able to access the computer it is on. Thus, while they greatly reduce
+        the number of passwords needed, users are still required to know more
+        than one strong password for good protection.
+
+    \section {Related Work}
+        The concept of a password manager is not new. There are many such
+        programs offered, and they come with a vast array of useful features if
+        you are willing to pay the price. As many of these services offer data
+        backup, these costs are generally subscription based rather than one
+        time. Interfaces to password managers range from simple terminal
+        commands to browser extensions that automatically save and input
+        passwords for web accounts without any prompting from the user. Our
+        application uses a simple graphical user interface. The user is first
+        prompted to input a master password or, if it is their first time using
+        the software, prompted to create a master password, and this password is
+        used to generate an encryption key to protect the password database.
+
+    \section {Design}
+
+
+    \section {Project Description}
+
+\end {document}
