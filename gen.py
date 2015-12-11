@@ -10,7 +10,8 @@ MASTERPASS=""
 passPhrase="This is a very long sentence that serves only to tests if the algorithms are using )*&0912ethe correct password 198026813265 sdalku1268435362 fasd6aoiyonmLKHAslfb.wek8"
 passPhrase+=' '* (16 - len(passPhrase) % 16)
 def setPass(x):
-	MASTERPASS=x;
+    MASTERPASS=x;
+    print (MASTERPASS)
 
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
@@ -70,7 +71,8 @@ def runGen(size, generator, ends):
     return password
             
             
-def cryptTest(password, accounts):
+def cryptTest(accounts):
+    password=MASTERPASS
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
@@ -98,20 +100,21 @@ def cryptTest(password, accounts):
                 chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
             outfile.write(encryptor.encrypt(chunk))
 
-def decrTest(password):
+def decrTest():
     testPass=False
+    password=MASTERPASS
     chunksize=24*1024
     iterations = 5000
     key = ''
     #key=key.digest()
-    with open('pas.enc', 'r') as infile:
+    with open('pas.enc', 'rb') as infile:
         origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
         iv = infile.read(16)
         salt=infile.read(64)
         key = PBKDF2(password, salt, dkLen=32, count=iterations)
         decryptor = AES.new(key, AES.MODE_CBC, iv)
         pasTest=decryptor
-        with open('test.enc', 'r') as testfile:
+        with open('test.enc', 'rb') as testfile:
             while True:
                 test=testfile.read(chunksize)
                 if len(test)==0:
