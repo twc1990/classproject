@@ -6,8 +6,11 @@ from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto.Protocol.KDF import PBKDF2
 
+MASTERPASS=""
 passPhrase="This is a very long sentence that serves only to tests if the algorithms are using )*&0912ethe correct password 198026813265 sdalku1268435362 fasd6aoiyonmLKHAslfb.wek8"
 passPhrase+=' '* (16 - len(passPhrase) % 16)
+def setPass(x):
+	MASTERPASS=x;
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
     if tell==1:
@@ -64,7 +67,7 @@ def runGen(size, generator, ends):
     return password
             
             
-def cryptTest(password, accounts):
+def cryptTest(MASTERPASS, accounts):
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
@@ -92,7 +95,7 @@ def cryptTest(password, accounts):
                 chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
             outfile.write(encryptor.encrypt(chunk))
 #encrypt_file(key, "pas.txt")
-def decrTest(password):
+def decrTest(MASTERPASS):
     testPass=False
     chunksize=24*1024
     iterations = 5000
@@ -129,4 +132,3 @@ def decrTest(password):
                         dic[v[0]]=v[1]
                 #outfile.truncate(origsize)
                 return dic
-

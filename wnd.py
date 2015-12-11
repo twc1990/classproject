@@ -157,7 +157,7 @@ def main_view(pwmap, pwmodify, options):
     edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify))
     delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
-    options = Button(frame, text="Options", command=lambda: options_menu(options))
+    options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify, tbl.get(tbl.curselection())))
 
     frame.grid(column=0, row=0)
     
@@ -171,4 +171,33 @@ def main_view(pwmap, pwmodify, options):
     options.grid(column=5, row=5, columnspan=1, rowspan=1)
 
     wnd.after(250, lambda: main_update(wnd, tbl, pwmap))
+    wnd.mainloop()
+    
+def checkPass(pas, confir):
+    if pas.len()>0:
+        if pas==confir:
+            setPass(pas)
+            return "Password Set"
+        else:
+            return "Password and Confirmation must match"
+    else:
+        return "Password cannot be empty"
+
+def options_menu(pwmap, pwmodify, options):
+    wnd=Tk()
+    wnd.title("Options Menu")
+    frame = Frame(wnd)
+    newMaster=Label(frame, text="Change Master Password: ")
+    confirmMaster=Label(frame, text="Confirm New Master Password: ")
+    editpw = Entry(frame)
+    confirmedpw = Entry(frame)
+    done = Button(frame, text="Confirm", command=lambda: checkPass(editpw.get(), confirmedpw.get()))
+    
+    frame.grid(column=0, row=0)
+    newMaster.grid(column=1, row=1)
+    confirmMaster.grid(column=1, row=2)
+    editpw.grid(column=2, row=1)
+    confirmedpw.grid(column=2, row=2)
+    done.grid(column=2, row=3)
+    
     wnd.mainloop()
