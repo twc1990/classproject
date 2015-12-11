@@ -26,6 +26,7 @@ def ranAlphNum(size): #generates letters and numbers
             let=chr(random.randint(97,122))
     return let
 def ranAll(special, size): #generates letters, numbers, special characters
+    let = ''
     if special==2: #does not use some special characters
         for x in range(size):
             tell=random.randint(1,3)
@@ -38,6 +39,7 @@ def ranAll(special, size): #generates letters, numbers, special characters
     elif special==3: #uses all special characters for password
         for x in range(size):
             let=chr(random.randint(33,126))
+    print(let)
     return let
 
 def runGen(size, generator, ends):    
@@ -57,6 +59,7 @@ def runGen(size, generator, ends):
             password=ranAlphNum(size)
         else:
             password=ranAll(generator, size)
+    print(password)
     return password
             
             
@@ -123,8 +126,6 @@ def decrTest(password):
                     for x in allsep:
                         v=x.split()
                         dic[v[0]]=v[1]
-
                 #outfile.truncate(origsize)
                 return dic
-        else:
-            
+
