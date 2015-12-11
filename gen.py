@@ -88,29 +88,25 @@ def cryptTest(accounts):
         ivencode = iv.encode('utf-8')
         outfile.write(ivencode)
         outfile.write(salt)
-        while True:
-            chunk=""
-            for key in accounts:
-                chunk=key+" "+accounts[key]+"\r\n"
-            if len(chunk) == 0:
-                break
-            elif len(chunk) % 16 != 0:
-                chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
-            outfile.write(encryptor.encrypt(chunk))
+        chunk=""
+        for key in accounts:
+            chunk=key+" "+accounts[key]+"\r\n"
+        if len(chunk) % 16 != 0:
+            chunk += ' ' * (16 - len(chunk) % 16)
+        outfile.write(encryptor.encrypt(chunk))
 
 def decrTest():
     testPass=False
     password=MASTERPASS
+    print (password)
     chunksize=24*1024
     iterations = 5000
     key = ''
     #key=key.digest()
     with open('pas.enc', 'rb') as infile:
-        ivcode = infile.read(16)
+        iv = infile.read(16)
         salt=infile.read(64)
-        print(salt)
         key = PBKDF2(password, salt, dkLen=32, count=iterations)
-        print(key)
         decryptor = AES.new(key, AES.MODE_CBC, iv)
         pasTest=decryptor
         with open('test.enc', 'rb') as testfile:
@@ -138,15 +134,14 @@ def decrTest():
                 return dic
         else:
             return None
-def crypt(password):
+def crypt():
+    password=MASTERPASS
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
     key = ''
     salt = os.urandom(64)
-    print(salt)
     key = PBKDF2(password, salt, dkLen=32, count=iterations)
-    print(key)
     #key=key.digest()
     encryptor = AES.new(key, AES.MODE_CBC, iv)
     testEnc=encryptor
