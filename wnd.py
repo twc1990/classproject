@@ -16,7 +16,7 @@ def initial_password(submit):
 
     pw = StringVar()
 
-    lbl = Label (frame, text = "Please input a master password. This can be changed later.")
+    lbl = Label (frame, text = "Please enter your password to encrypt/decrypt the passwords file.")
     inp = Entry (frame, textvariable = pw, show = "*")
     btn = Button(frame, text = "Confirm", default = "active", command = lambda w=wnd: quit_and(w, lambda: submit(pw.get())))
 
@@ -176,5 +176,5 @@ def main_view(pwmap, pwmodify, options):
     wnd.mainloop()
 
 #initial_password(lambda x: print(str(x)))
-main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
+#main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
 #add_pw({"test":"test", "asdf":"jkl;", "qwerty":"uiop"},)
