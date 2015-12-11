@@ -86,7 +86,7 @@ def add_pw(pwmap, modify, key):
     editkey = Entry(frame)
     editpw = Entry(frame)
     editsz = Entry(frame)
-    gen = Button(frame, text="Generate", command=lambda, lambda: )
+    gen = Button(frame, text="Generate")
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()}), lambda: print({k.get(): p.get()})))
 
     frame.grid(column=0, row=0)

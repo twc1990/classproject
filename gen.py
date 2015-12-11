@@ -4,7 +4,7 @@ import random
 import os, random, struct
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
-from crypt import encrypt_file, decrypt_file
+
 
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
@@ -15,17 +15,17 @@ def firstLast(): #only generates letters
     return let
 def ranAlphNum(size): #generates letters and numbers
     for x in range(size):
-		tell=random.randint(1,3)
-		if tell==1:
-			let=chr(random.randint(48,57))
-		elif tell==2:
-			let=chr(random.randint(65,90))
-		elif tell==3:
-			let=chr(random.randint(97,122))
+        tell=random.randint(1,3)
+        if tell==1:
+            let=chr(random.randint(48,57))
+        elif tell==2:
+            let=chr(random.randint(65,90))
+        elif tell==3:
+            let=chr(random.randint(97,122))
     return let
 def ranAll(special, size): #generates letters, numbers, special characters
     if special==2: #does not use some special characters
-        for x in range(size)
+        for x in range(size):
             tell=random.randint(1,3)
             if tell==1:
                 let=chr(random.randint(33,57))
@@ -34,8 +34,8 @@ def ranAll(special, size): #generates letters, numbers, special characters
             elif tell==3:
                 let=chr(random.randint(97,122))
     elif special==3: #uses all special characters for password
-        for x in range(size)
-        let=chr(random.randint(33,126))
+        for x in range(size):
+            let=chr(random.randint(33,126))
     return let
 
 def runGen(size, generator, ends):    
@@ -52,9 +52,9 @@ def runGen(size, generator, ends):
             password=ranAlphNum(size)
         else:
             password=ranAll(generator, size)
-	return password.
-			
-			
+    return password
+            
+            
 def cryptTest():
     key = SHA256.new()
     key.update(b'password')
