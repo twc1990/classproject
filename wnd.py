@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter.ttk import *
-from gen import *
 
 def quit_and(w, *fns):
     for fn in fns:
@@ -54,7 +53,7 @@ def edit_pw(pwmap, modify, key):
 
     frame = Frame(wnd)
     edit = Entry(frame)
-    done = Button(frame, text="Confirm", command=lambda w=wnd, k=key, p=edit: quit_and(w, modify(k, p.get()), lambda: pwmap.update({k: p.get()}), lambda: print({k: p.get()})))
+    done = Button(frame, text="Confirm", command=lambda w=wnd, k=key, p=edit: quit_and(w, modify(k, p.get()), lambda: pwmap.update({k: p.get()})))
 
     frame.grid(column=0, row=0)
     edit.grid(column=0, row=0, columnspan=2)
@@ -111,7 +110,7 @@ def delete_pw(pwmap, modify, key):
     wnd = Tk()
     wnd.title("Warning")
     frame = Frame(wnd)
-    lbl = Label(frame, text="Password data for " + key + " will be lost permanently. Are you sure you want to delete " + key + " password?")
+    lbl = Label(frame, text="Password data for " + key + " will be lost permanently.\nAre you sure you want to delete " + key + " password?")
     yes = Button(frame, text="Confirm", command=lambda w=wnd: quit_and(w, lambda: modify(key, ""), lambda: pwmap.pop(key)))
     no = Button(frame, text="Cancel", command=lambda w=wnd: quit_and(w))
 
@@ -137,7 +136,6 @@ def main_update(window, table, passwords):
             for k in passwords.keys():
                 if key == k:
                     raise(DeepBreak)
-            print("Nooooo!")
             table.delete(table.curselection())
         except:
             pass
@@ -163,8 +161,8 @@ def main_view(pwmap, pwmodify, options):
 
     frame.grid(column=0, row=0)
     
-    tbl.grid(column=1, row=1, columnspan=3, rowspan=4)
-    scl.grid(column=4, row=1, columnspan=1, rowspan=4, sticky=(N,S))
+    tbl.grid(column=1, row=1, columnspan=3, rowspan=5)
+    scl.grid(column=4, row=1, columnspan=1, rowspan=5, sticky=(N,S))
 
     view.grid(column=5, row=1, columnspan=1, rowspan=1)
     edit.grid(column=5, row=2, columnspan=1, rowspan=1)
@@ -174,7 +172,3 @@ def main_view(pwmap, pwmodify, options):
 
     wnd.after(250, lambda: main_update(wnd, tbl, pwmap))
     wnd.mainloop()
-
-#initial_password(lambda x: print(str(x)))
-main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
-#add_pw({"test":"test", "asdf":"jkl;", "qwerty":"uiop"},)
