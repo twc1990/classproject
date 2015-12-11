@@ -4,10 +4,11 @@ import gen
 import wnd
 
 while(True):
-    wnd.initial_password(gen.setPass)
-    passwords = gen.decrTest(gen.MASTERPASS)
-    if passwords:
-        break
-    wnd.password_error()
+    wnd.initial_password(lambda x: print(x))#gen.setPass)
+    #passwords = gen.decrTest()
+    #if passwords:
+    break
+    #wnd.password_error()
 
+passwords = { "Facebook":"fbpass", "Google+":"g+pass", "Youtube":"ytpass", "Reddit":"rpass", "Tumblr":"tupass", "Twitter":"twpass" }
 wnd.main_view(passwords, lambda key, pw: print("Database entry: " + key + " => " + pw), None)

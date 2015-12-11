@@ -24,11 +24,11 @@ def initial_password(submit):
     inp = Entry (frame, textvariable = pw, show = "*")
     btn = Button(frame, text = "Confirm", default = "active", command = lambda w=wnd: quit_and(w, lambda: submit(pw.get())))
 
-    frame.grid(column = 0, row = 0)
+    frame.grid(column = 0, row = 0, padx=6, pady=6)
 
-    lbl.grid(column = 1, row = 0, columnspan = 3)
-    inp.grid(column = 1, row = 1, columnspan = 3)
-    btn.grid(column = 2, row = 2, columnspan = 1)
+    lbl.grid(column = 1, row = 0, columnspan = 3, padx=6, pady=6)
+    inp.grid(column = 1, row = 1, columnspan = 3, padx=6, pady=6)
+    btn.grid(column = 2, row = 2, columnspan = 1, padx=6, pady=6)
 
     wnd.bind("<Return>", lambda e, b=btn: b.invoke())
     wnd.mainloop()
@@ -47,10 +47,10 @@ def view_pw(pwmap, key):
     box.config(state="readonly")
     btn = Button(frame, text="Close", command=lambda w=wnd: quit_and(w))
 
-    frame.grid(column=0, row=0)
-    label.grid(column=0, row=0, columnspan=1)
-    box.grid(column=1, row=0, columnspan=1)
-    btn.grid(column=0, row=1, columnspan=2)
+    frame.grid(column=0, row=0, padx=6, pady=6)
+    label.grid(column=0, row=0, columnspan=1, padx=6, pady=6)
+    box.grid(column=1, row=0, columnspan=1, padx=6, pady=6)
+    btn.grid(column=0, row=1, columnspan=2, padx=6, pady=6)
 
     wnd.mainloop()
 
@@ -63,9 +63,9 @@ def edit_pw(pwmap, modify, key):
     edit.insert(index=0, string=pwmap[key])
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=key, p=edit: quit_and(w, modify(k, p.get()), lambda: pwmap.update({k: p.get()})))
 
-    frame.grid(column=0, row=0)
-    edit.grid(column=0, row=0, columnspan=2)
-    done.grid(column=0, row=1, columnspan=2)
+    frame.grid(column=0, row=0, padx=6, pady=6)
+    edit.grid(column=0, row=0, columnspan=2, padx=6, pady=6)
+    done.grid(column=0, row=1, columnspan=2, padx=6, pady=6)
 
     wnd.mainloop()
 
@@ -95,16 +95,17 @@ def add_pw(pwmap, modify):
     gen = Button(frame, text="Generate", command=lambda: also(lambda: editpw.delete(0,END), lambda: editpw.insert(index=END, string=generate(int(sizeBox.get()),pattern.get(), 0))))
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()})))
 
-    frame.grid(column=0, row=0)
-    keylbl.grid(column=0, row=0)
-    pwlbl.grid(column=0, row=1)
-    editkey.grid(column=1, row=0)
-    editpw.grid(column=1, row=1)
-    pattern.grid(column=2, row=1)
-    gen.grid(column=2, row=2, columnspan=2)
-    done.grid(column=0, row=2, columnspan=2)
-    sizelbl.grid(column=4, row=0)
-    sizeBox.grid(column=4,row=1)
+    frame.grid(column=0, row=0, padx=6, pady=6)
+    keylbl.grid(column=0, row=0, padx=6, pady=6)
+    pwlbl.grid(column=0, row=1, padx=6, pady=6)
+    editkey.grid(column=1, row=0, padx=6, pady=6)
+    editpw.grid(column=1, row=1, padx=6, pady=6)
+    pattern.grid(column=2, row=1, padx=6, pady=6)
+    gen.grid(column=2, row=2, columnspan=2, padx=6, pady=6)
+    done.grid(column=0, row=2, columnspan=2, padx=6, pady=6)
+    sizelbl.grid(column=4, row=0, padx=6, pady=6)
+    sizeBox.grid(column=4,row=1, padx=6, pady=6)
+
     wnd.mainloop()
 
 def delete_pw(pwmap, modify, key):
@@ -115,10 +116,10 @@ def delete_pw(pwmap, modify, key):
     yes = Button(frame, text="Confirm", command=lambda w=wnd: quit_and(w, lambda: modify(key, ""), lambda: pwmap.pop(key)))
     no = Button(frame, text="Cancel", command=lambda w=wnd: quit_and(w))
 
-    frame.grid(column=0, row=0)
-    lbl.grid(column=0, row=0, columnspan=2)
-    yes.grid(column=0, row=1)
-    no.grid(column=1, row=1)
+    frame.grid(column=0, row=0, padx=6, pady=6)
+    lbl.grid(column=0, row=0, columnspan=2, padx=6, pady=6)
+    yes.grid(column=0, row=1, padx=6, pady=6)
+    no.grid(column=1, row=1, padx=6, pady=6)
 
     wnd.mainloop()
 
@@ -160,16 +161,16 @@ def main_view(pwmap, pwmodify, options):
     delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify))
 
-    frame.grid(column=0, row=0)
+    frame.grid(column=0, row=0, padx=6, pady=6)
     
-    tbl.grid(column=1, row=1, columnspan=3, rowspan=5)
-    scl.grid(column=4, row=1, columnspan=1, rowspan=5, sticky=(N,S))
+    tbl.grid(column=1, row=1, columnspan=3, rowspan=5, padx=6, pady=6)
+    scl.grid(column=4, row=1, columnspan=1, rowspan=5, sticky=(N,S), padx=6, pady=6)
 
-    view.grid(column=5, row=1, columnspan=1, rowspan=1)
-    edit.grid(column=5, row=2, columnspan=1, rowspan=1)
-    add.grid(column=5, row=3, columnspan=1, rowspan=1)
-    delete.grid(column=5, row=4, columnspan=1, rowspan=1)
-    options.grid(column=5, row=5, columnspan=1, rowspan=1)
+    view.grid(column=5, row=1, columnspan=1, rowspan=1, padx=6, pady=6)
+    edit.grid(column=5, row=2, columnspan=1, rowspan=1, padx=6, pady=6)
+    add.grid(column=5, row=3, columnspan=1, rowspan=1, padx=6, pady=6)
+    delete.grid(column=5, row=4, columnspan=1, rowspan=1, padx=6, pady=6)
+    options.grid(column=5, row=5, columnspan=1, rowspan=1, padx=6, pady=6)
 
     wnd.after(250, lambda: main_update(wnd, tbl, pwmap))
     wnd.mainloop()
@@ -194,17 +195,17 @@ def options_menu(pwmap, pwmodify, options):
     confirmedpw = Entry(frame)
     done = Button(frame, text="Confirm", command=lambda: checkPass(editpw.get(), confirmedpw.get()))
     
-    frame.grid(column=0, row=0)
-    newMaster.grid(column=1, row=1)
-    confirmMaster.grid(column=1, row=2)
-    editpw.grid(column=2, row=1)
-    confirmedpw.grid(column=2, row=2)
-    done.grid(column=2, row=3)
+    frame.grid(column=0, row=0, padx=6, pady=6)
+    newMaster.grid(column=1, row=1, padx=6, pady=6)
+    confirmMaster.grid(column=1, row=2, padx=6, pady=6)
+    editpw.grid(column=2, row=1, padx=6, pady=6)
+    confirmedpw.grid(column=2, row=2, padx=6, pady=6)
+    done.grid(column=2, row=3, padx=6, pady=6)
     
     wnd.mainloop()
 
 def password_error():
     w = Tk()
     w.title("Error!")
-    Label(w, text="You have entered an incorrect password.").grid(column=0, row=0)
-    Button(w, text="Retry").grid(column=0, row=0)
+    Label(w, text="You have entered an incorrect password.").grid(column=0, row=0, padx=6, pady=6)
+    Button(w, text="Retry").grid(column=0, row=0, padx=6, pady=6)
