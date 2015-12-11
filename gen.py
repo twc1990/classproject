@@ -11,34 +11,35 @@ passPhrase+=' '* (16 - len(passPhrase) % 16)
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
     if tell==1:
-        let=chr(random.randint(65,90))
+        let+=chr(random.randint(65,90))
     elif tell==2:
-        let=chr(random.randint(97,122))
+        let+=chr(random.randint(97,122))
     return let
 def ranAlphNum(size): #generates letters and numbers
+    let = ''
     for x in range(size):
         tell=random.randint(1,3)
         if tell==1:
-            let=chr(random.randint(48,57))
+            let+=chr(random.randint(48,57))
         elif tell==2:
-            let=chr(random.randint(65,90))
+            let+=chr(random.randint(65,90))
         elif tell==3:
-            let=chr(random.randint(97,122))
+            let+=chr(random.randint(97,122))
     return let
 def ranAll(special, size): #generates letters, numbers, special characters
     let = ''
-    if special==2: #does not use some special characters
+    if special=="Restricted Special": #does not use some special characters
         for x in range(size):
             tell=random.randint(1,3)
             if tell==1:
-                let=chr(random.randint(33,57))
+                let+=chr(random.randint(33,57))
             elif tell==2:
-                let=chr(random.randint(65,90))
+                let+=chr(random.randint(65,90))
             elif tell==3:
-                let=chr(random.randint(97,122))
-    elif special==3: #uses all special characters for password
+                let+=chr(random.randint(97,122))
+    else: #uses all special characters for password
         for x in range(size):
-            let=chr(random.randint(33,126))
+            let+=chr(random.randint(33,126))
     print(let)
     return let
 
@@ -50,12 +51,12 @@ def runGen(size, generator, ends):
     if ends==1:
         size=size-2
         password=firstLast()
-        if generator==1:
+        if generator=="Alphanumeric":
             password=password+""+ranAlphNum(size)+""+firstLast()
         else:
             password=password+""+ranAll(generator, size)+""+firstLast()
-    elif ends==0:
-        if generator==1:
+    else:
+        if generator=="Alphanumeric":
             password=ranAlphNum(size)
         else:
             password=ranAll(generator, size)
@@ -76,20 +77,20 @@ def cryptTest(password, accounts):
     #filesize = os.path.getsize('pas.txt')
     with open('test.enc', 'wb') as testFile:
         testFile.write(encryptor.encrypt(passPhrase))
-	with open('pas.enc', 'wb') as outfile:
-		outfile.write(struct.pack('<Q'))
-		ivencode = iv.encode('utf-8')
-		outfile.write(ivencode)
-		outfile.write(salt)
-		while True:
-			chunk=""
-			for key in accounts:
-				chunk=key+" "+accounts[key]+"\r\n"
-			if len(chunk) == 0:
-				break
-			elif len(chunk) % 16 != 0:
-				chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
-			outfile.write(encryptor.encrypt(chunk))
+    with open('pas.enc', 'wb') as outfile:
+        outfile.write(struct.pack('<Q'))
+        ivencode = iv.encode('utf-8')
+        outfile.write(ivencode)
+        outfile.write(salt)
+        while True:
+            chunk=""
+            for key in accounts:
+                chunk=key+" "+accounts[key]+"\r\n"
+            if len(chunk) == 0:
+                break
+            elif len(chunk) % 16 != 0:
+                chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
+            outfile.write(encryptor.encrypt(chunk))
 #encrypt_file(key, "pas.txt")
 def decrTest(password):
     testPass=False

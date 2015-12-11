@@ -1,10 +1,14 @@
 from tkinter import *
 from tkinter.ttk import *
+from gen import runGen as generate
 
-def quit_and(w, *fns):
+def also(*fns):
     for fn in fns:
         if fn:
             fn()
+
+def quit_and(w, *fns):
+    also(*fns)
     w.destroy()
 
 def initial_password(submit):
@@ -37,7 +41,9 @@ def view_pw(pwmap, key):
     pw = StringVar(value="123456")
 
     label = Label(frame, text=key + ": ")
-    box = Label(frame, text=pwmap[key])
+    box = Entry(frame)
+    box.insert(index=0, string=pwmap[key])
+    box.config(state="readonly")
     btn = Button(frame, text="Close", command=lambda w=wnd: quit_and(w))
 
     frame.grid(column=0, row=0)
@@ -53,6 +59,7 @@ def edit_pw(pwmap, modify, key):
 
     frame = Frame(wnd)
     edit = Entry(frame)
+    edit.insert(index=0, string=pwmap[key])
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=key, p=edit: quit_and(w, modify(k, p.get()), lambda: pwmap.update({k: p.get()})))
 
     frame.grid(column=0, row=0)
@@ -61,7 +68,7 @@ def edit_pw(pwmap, modify, key):
 
     wnd.mainloop()
 
-def add_pw(pwmap, modify, key):
+def add_pw(pwmap, modify):
     wnd = Tk()
     wnd.title("Add Password")
 
@@ -69,41 +76,34 @@ def add_pw(pwmap, modify, key):
 
     newkey = StringVar()
     newpw = StringVar()
-    newsz = StringVar()
 
     keylbl = Label(frame, text="Name: ")
     pwlbl = Label(frame, text="Password: ")
     sizelbl = Label(frame, text="Password Size: ")
-    endVal = StringVar()
-    ends = Checkbutton(frame, text='Must End with Letter',variable=endVal,
-	    onvalue=1, offvalue=0)
+    
+    pattern = Combobox(frame)
+    pattern['values'] = ["Alphanumeric", "Restricted Special", "All Characters"]
+    pattern.set("Alphanumeric")
 
-    genOpt = StringVar()
-    alphNum = Radiobutton(frame, text='Letters and Numbers Only', variable=genOpt, value='1')
-    restricted =Radiobutton(frame, text='Include !@#$%^&*(())', variable=genOpt, value='2')
-    all = Radiobutton(frame, text='All Characters', variable=genOpt, value='3')
-    sizeVar = StringVar()
-    sizeBox = Combobox(frame, textvariable=sizeVar)
+    sizeBox = Combobox(frame)
     sizeBox['values'] = list(range(8, 26))
+    sizeBox.set(15)
     
     editkey = Entry(frame)
     editpw = Entry(frame)
-    gen = Button(frame, text="Generate", command= runGen(sizeVar,genOpt,endVal))
-    done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()}), lambda: print({k.get(): p.get()})))
+    gen = Button(frame, text="Generate", command=lambda: also(lambda: editpw.delete(0,END), lambda: editpw.insert(index=END, string=generate(int(sizeBox.get()),pattern.get(), 0))))
+    done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()})))
 
     frame.grid(column=0, row=0)
     keylbl.grid(column=0, row=0)
     pwlbl.grid(column=0, row=1)
     editkey.grid(column=1, row=0)
     editpw.grid(column=1, row=1)
-    gen.grid(column=2, row=1)
+    pattern.grid(column=2, row=1)
+    gen.grid(column=2, row=2, columnspan=2)
     done.grid(column=0, row=2, columnspan=2)
-    alphNum.grid(column=3, row=1)
-    restricted.grid(column=3, row=2)
-    all.grid(column=3, row=3)
-    ends.grid(column=4, row=0)
-    sizelbl.grid(column=4, row=1)
-    sizeBox.grid(column=4,row=2)
+    sizelbl.grid(column=4, row=0)
+    sizeBox.grid(column=4,row=1)
     wnd.mainloop()
 
 def delete_pw(pwmap, modify, key):
@@ -155,7 +155,7 @@ def main_view(pwmap, pwmodify, options):
 
     view = Button(frame, text="View", default="active", command=lambda: view_pw(pwmap, tbl.get(tbl.curselection())))
     edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
-    add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
+    add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify))
     delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     options = Button(frame, text="Options", command=lambda: options_menu(options))
 
