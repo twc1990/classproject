@@ -64,5 +64,36 @@
         Python standard library.
 
     \section {Project Description}
+        The program opens with a prompt. If this is the user's first time using
+        the password manager, the prompt asks the user to set a master password
+        to be used to encrypt and access the stored password database in the
+        future; if the user has already set a master password, the prompt asks
+        the user to input the password to access the database.
+
+        On decrypting the database, the app opens into a screen that displays
+        all of the stored passwords, listed by their unique identifiers, and
+        offers the option to add a new password, view, edit, or delete an
+        existing password, or open an ``Options'' menu.
+
+        If the user chooses to add a new password, a dialog is opened that
+        asks the user to input a unique name for the password (for example,
+        ``Facebook account'' or ``Bank PIN'') and the password itself. The
+        dialog also offers the option to generate a strong password based on a
+        set of given parameters, including character set and length. Once a
+        password has been input and a name has been given, the user hits
+        ``Confirm'' and the password is added to the database.
+
+        If the user selects an existing password, they have the option to view,
+        edit, or delete it. If they select ``View'', a dialog opens that shows
+        the identifier and password. If they select ``Edit'', a similar dialog
+        opens, showing the identifier and prompting the user to enter a new
+        password. If they select ``Delete'', a warning dialog opens, and the
+        user can either confirm or cancel the permanent deletion of their
+        password.
+
+        If the user opens the ``Options'' panel, they are presented with a few
+        auxiliary functions: They can change the master password, generate a
+        new encryption key using the same password, or permanently delete the
+        password database.
 
 \end {document}
