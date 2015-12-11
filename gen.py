@@ -82,11 +82,9 @@ def cryptTest(accounts):
     #key=key.digest()
     encryptor = AES.new(key, AES.MODE_CBC, iv)
     testEnc=encryptor
-    #filesize = os.path.getsize('pas.txt')
     with open('test.enc', 'wb') as testFile:
         testFile.write(encryptor.encrypt(passPhrase))
     with open('pas.enc', 'wb') as outfile:
-        outfile.write(struct.pack('<Q'))
         ivencode = iv.encode('utf-8')
         outfile.write(ivencode)
         outfile.write(salt)
@@ -108,10 +106,11 @@ def decrTest():
     key = ''
     #key=key.digest()
     with open('pas.enc', 'rb') as infile:
-        origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
-        iv = infile.read(16)
+        ivcode = infile.read(16)
         salt=infile.read(64)
+        print(salt)
         key = PBKDF2(password, salt, dkLen=32, count=iterations)
+        print(key)
         decryptor = AES.new(key, AES.MODE_CBC, iv)
         pasTest=decryptor
         with open('test.enc', 'rb') as testfile:
@@ -124,7 +123,7 @@ def decrTest():
                     testPass=True
         print(testPass)
         if testPass:
-            with open('testing.txt', 'w') as outfile:
+            with open('testing.txt', 'rb') as outfile:
                 while True:
                     chunk = infile.read(chunksize)
                     if len(chunk) == 0:
@@ -136,7 +135,32 @@ def decrTest():
                     for x in allsep:
                         v=x.split()
                         dic[v[0]]=v[1]
-                #outfile.truncate(origsize)
                 return dic
         else:
             return None
+def crypt(password):
+    chunksize=64*1024
+    iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
+    iterations = 5000
+    key = ''
+    salt = os.urandom(64)
+    print(salt)
+    key = PBKDF2(password, salt, dkLen=32, count=iterations)
+    print(key)
+    #key=key.digest()
+    encryptor = AES.new(key, AES.MODE_CBC, iv)
+    testEnc=encryptor
+    with open('test.enc', 'wb') as testFile:
+        testFile.write(encryptor.encrypt(passPhrase))
+    with open('pas.txt', 'rb') as infile:
+        with open('pas.enc', 'wb') as outfile:
+            ivencode = iv.encode('utf-8')
+            outfile.write(ivencode)
+            outfile.write(salt)
+            while True:
+                chunk = infile.read(chunksize)
+                if len(chunk) == 0:
+                    break
+                elif len(chunk) % 16 != 0:
+                    chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
+                outfile.write(encryptor.encrypt(chunk))
