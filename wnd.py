@@ -15,7 +15,7 @@ def initial_password(submit):
 
     pw = StringVar()
 
-    lbl = Label (frame, text = "Please input a master password. This can be changed later.")
+    lbl = Label (frame, text = "Please enter your password to encrypt/decrypt the passwords file.")
     inp = Entry (frame, textvariable = pw, show = "*")
     btn = Button(frame, text = "Confirm", default = "active", command = lambda w=wnd: quit_and(w, lambda: submit(pw.get())))
 
@@ -61,7 +61,7 @@ def edit_pw(pwmap, modify, key):
 
     wnd.mainloop()
 
-def add_pw(pwmap, modify):
+def add_pw(pwmap, modify, key):
     wnd = Tk()
     wnd.title("Add Password")
 
@@ -74,11 +74,11 @@ def add_pw(pwmap, modify):
     keylbl = Label(frame, text="Name: ")
     pwlbl = Label(frame, text="Password: ")
     sizelbl = Label(frame, text="Password Size: ")
-    endVal = IntVar()
+    endVal = StringVar()
     ends = Checkbutton(frame, text='Must End with Letter',variable=endVal,
-        onvalue=1, offvalue=0)
-    
-    genOpt = IntVar()
+	    onvalue=1, offvalue=0)
+
+    genOpt = StringVar()
     alphNum = Radiobutton(frame, text='Letters and Numbers Only', variable=genOpt, value='1')
     restricted =Radiobutton(frame, text='Include !@#$%^&*(())', variable=genOpt, value='2')
     all = Radiobutton(frame, text='All Characters', variable=genOpt, value='3')
@@ -88,7 +88,7 @@ def add_pw(pwmap, modify):
     
     editkey = Entry(frame)
     editpw = Entry(frame)
-    gen = Button(frame, text="Generate", command=lambda: editpw.insert(END, runGen(sizeVar.get(), genOpt.get(), endVal.get())))
+    gen = Button(frame, text="Generate", command= runGen(sizeVar,genOpt,endVal))
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()}), lambda: print({k.get(): p.get()})))
 
     frame.grid(column=0, row=0)
@@ -155,7 +155,7 @@ def main_view(pwmap, pwmodify, options):
 
     view = Button(frame, text="View", default="active", command=lambda: view_pw(pwmap, tbl.get(tbl.curselection())))
     edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
-    add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify))
+    add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     options = Button(frame, text="Options", command=lambda: options_menu(options))
 

@@ -1,8 +1,7 @@
 from wnd import *
+from gen import *
 
-hasLaunched=0
 class pasMana():
-	if hasLaunched==0:
-		initial_password(lambda x: print(str(x)))
-	else:
-		initial_password(lambda x: print(str(x)))
+    #initial_password(lambda x: print(str(x)))
+    cryptTest("password")
+    decrTest("password")
