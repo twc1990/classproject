@@ -60,7 +60,7 @@ def runGen(size, generator, ends):
     return password
             
             
-def cryptTest(password):
+def cryptTest(password, accounts):
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
@@ -70,22 +70,23 @@ def cryptTest(password):
     #key=key.digest()
     encryptor = AES.new(key, AES.MODE_CBC, iv)
     testEnc=encryptor
-    filesize = os.path.getsize('pas.txt')
+    #filesize = os.path.getsize('pas.txt')
     with open('test.enc', 'wb') as testFile:
         testFile.write(encryptor.encrypt(passPhrase))
-    with open('pas.txt', 'rb') as infile:
-        with open('pas.enc', 'wb') as outfile:
-            outfile.write(struct.pack('<Q', filesize))
-            ivencode = iv.encode('utf-8')
-            outfile.write(ivencode)
-            outfile.write(salt)
-            while True:
-                chunk = infile.read(chunksize)
-                if len(chunk) == 0:
-                    break
-                elif len(chunk) % 16 != 0:
-                    chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
-                outfile.write(encryptor.encrypt(chunk))
+	with open('pas.enc', 'wb') as outfile:
+		outfile.write(struct.pack('<Q'))
+		ivencode = iv.encode('utf-8')
+		outfile.write(ivencode)
+		outfile.write(salt)
+		while True:
+			chunk=""
+			for key in accounts:
+				chunk=key+" "+accounts[key]+"\r\n"
+			if len(chunk) == 0:
+				break
+			elif len(chunk) % 16 != 0:
+				chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
+			outfile.write(encryptor.encrypt(chunk))
 #encrypt_file(key, "pas.txt")
 def decrTest(password):
     testPass=False
@@ -115,9 +116,15 @@ def decrTest(password):
                     chunk = infile.read(chunksize)
                     if len(chunk) == 0:
                         break
-                    outfile.write(decryptor.decrypt(chunk))
+                    all=decryptor.decrypt(chunk).decode().strip()
+                    allsep=all.split("\r\n")
+                    leng=int(len(allsep)/2)
+                    dic={}
+                    for x in allsep:
+                        v=x.split()
+                        dic[v[0]]=v[1]
 
                 #outfile.truncate(origsize)
-                return True
+                return dic
         else:
-            return False
+            
