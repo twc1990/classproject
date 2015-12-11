@@ -11,6 +11,7 @@ passPhrase="This is a very long sentence that serves only to tests if the algori
 passPhrase+=' '* (16 - len(passPhrase) % 16)
 def setPass(x):
 	MASTERPASS=x;
+
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
     if tell==1:
@@ -18,6 +19,7 @@ def firstLast(): #only generates letters
     elif tell==2:
         let+=chr(random.randint(97,122))
     return let
+
 def ranAlphNum(size): #generates letters and numbers
     let = ''
     for x in range(size):
@@ -29,6 +31,7 @@ def ranAlphNum(size): #generates letters and numbers
         elif tell==3:
             let+=chr(random.randint(97,122))
     return let
+
 def ranAll(special, size): #generates letters, numbers, special characters
     let = ''
     if special=="Restricted Special": #does not use some special characters
@@ -67,7 +70,7 @@ def runGen(size, generator, ends):
     return password
             
             
-def cryptTest(MASTERPASS, accounts):
+def cryptTest(password, accounts):
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
@@ -94,21 +97,21 @@ def cryptTest(MASTERPASS, accounts):
             elif len(chunk) % 16 != 0:
                 chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
             outfile.write(encryptor.encrypt(chunk))
-#encrypt_file(key, "pas.txt")
-def decrTest(MASTERPASS):
+
+def decrTest(password):
     testPass=False
     chunksize=24*1024
     iterations = 5000
     key = ''
     #key=key.digest()
-    with open('pas.enc', 'rb') as infile:
+    with open('pas.enc', 'r') as infile:
         origsize = struct.unpack('<Q', infile.read(struct.calcsize('Q')))[0]
         iv = infile.read(16)
         salt=infile.read(64)
         key = PBKDF2(password, salt, dkLen=32, count=iterations)
         decryptor = AES.new(key, AES.MODE_CBC, iv)
         pasTest=decryptor
-        with open('test.enc', 'rb') as testfile:
+        with open('test.enc', 'r') as testfile:
             while True:
                 test=testfile.read(chunksize)
                 if len(test)==0:
@@ -118,7 +121,7 @@ def decrTest(MASTERPASS):
                     testPass=True
         print(testPass)
         if testPass:
-            with open('testing.txt', 'wb') as outfile:
+            with open('testing.txt', 'w') as outfile:
                 while True:
                     chunk = infile.read(chunksize)
                     if len(chunk) == 0:
@@ -132,3 +135,5 @@ def decrTest(MASTERPASS):
                         dic[v[0]]=v[1]
                 #outfile.truncate(origsize)
                 return dic
+        else:
+            return None

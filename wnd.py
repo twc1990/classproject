@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.ttk import *
 from gen import runGen as generate
+from gen import setPass
 
 def also(*fns):
     for fn in fns:
@@ -157,7 +158,7 @@ def main_view(pwmap, pwmodify, options):
     edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify))
     delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
-    options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify, tbl.get(tbl.curselection())))
+    options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify))
 
     frame.grid(column=0, row=0)
     
@@ -174,7 +175,7 @@ def main_view(pwmap, pwmodify, options):
     wnd.mainloop()
     
 def checkPass(pas, confir):
-    if pas.len()>0:
+    if len(pas)>0:
         if pas==confir:
             setPass(pas)
             return "Password Set"
@@ -201,3 +202,9 @@ def options_menu(pwmap, pwmodify, options):
     done.grid(column=2, row=3)
     
     wnd.mainloop()
+
+def password_error():
+    w = Tk()
+    w.title("Error!")
+    Label(w, text="You have entered an incorrect password.").grid(column=0, row=0)
+    Button(w, text="Retry").grid(column=0, row=0)
