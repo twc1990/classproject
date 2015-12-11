@@ -6,8 +6,11 @@ from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto.Protocol.KDF import PBKDF2
 
+MASTERPASS=""
 passPhrase="This is a very long sentence that serves only to tests if the algorithms are using )*&0912ethe correct password 198026813265 sdalku1268435362 fasd6aoiyonmLKHAslfb.wek8"
 passPhrase+=' '* (16 - len(passPhrase) % 16)
+def setPass(x):
+	MASTERPASS=x;
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
     if tell==1:
@@ -19,11 +22,11 @@ def ranAlphNum(size): #generates letters and numbers
     for x in range(size):
         tell=random.randint(1,3)
         if tell==1:
-            let=chr(random.randint(48,57))
+            let=+chr(random.randint(48,57))
         elif tell==2:
-            let=chr(random.randint(65,90))
+            let=+chr(random.randint(65,90))
         elif tell==3:
-            let=chr(random.randint(97,122))
+            let=+chr(random.randint(97,122))
     return let
 def ranAll(special, size): #generates letters, numbers, special characters
     let = ''
@@ -33,12 +36,12 @@ def ranAll(special, size): #generates letters, numbers, special characters
             if tell==1:
                 let=chr(random.randint(33,57))
             elif tell==2:
-                let=chr(random.randint(65,90))
+                let=+chr(random.randint(65,90))
             elif tell==3:
                 let=chr(random.randint(97,122))
     elif special==3: #uses all special characters for password
         for x in range(size):
-            let=chr(random.randint(33,126))
+            let=+chr(random.randint(33,126))
     print(let)
     return let
 
@@ -63,7 +66,7 @@ def runGen(size, generator, ends):
     return password
             
             
-def cryptTest(password, accounts):
+def cryptTest(MASTERPASS, accounts):
     chunksize=64*1024
     iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
     iterations = 5000
@@ -76,22 +79,22 @@ def cryptTest(password, accounts):
     #filesize = os.path.getsize('pas.txt')
     with open('test.enc', 'wb') as testFile:
         testFile.write(encryptor.encrypt(passPhrase))
-	with open('pas.enc', 'wb') as outfile:
-		outfile.write(struct.pack('<Q'))
-		ivencode = iv.encode('utf-8')
-		outfile.write(ivencode)
-		outfile.write(salt)
-		while True:
-			chunk=""
-			for key in accounts:
-				chunk=key+" "+accounts[key]+"\r\n"
-			if len(chunk) == 0:
-				break
-			elif len(chunk) % 16 != 0:
-				chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
-			outfile.write(encryptor.encrypt(chunk))
+    with open('pas.enc', 'wb') as outfile:
+        outfile.write(struct.pack('<Q'))
+        ivencode = iv.encode('utf-8')
+        outfile.write(ivencode)
+        outfile.write(salt)
+        while True:
+            chunk=""
+            for key in accounts:
+                chunk=key+" "+accounts[key]+"\r\n"
+            if len(chunk) == 0:
+                break
+            elif len(chunk) % 16 != 0:
+                chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
+            outfile.write(encryptor.encrypt(chunk))
 #encrypt_file(key, "pas.txt")
-def decrTest(password):
+def decrTest(MASTERPASS):
     testPass=False
     chunksize=24*1024
     iterations = 5000

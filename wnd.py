@@ -77,7 +77,7 @@ def add_pw(pwmap, modify, key):
     sizelbl = Label(frame, text="Password Size: ")
     endVal = StringVar()
     ends = Checkbutton(frame, text='Must End with Letter',variable=endVal,
-	    onvalue=1, offvalue=0)
+        onvalue=1, offvalue=0)
 
     genOpt = StringVar()
     alphNum = Radiobutton(frame, text='Letters and Numbers Only', variable=genOpt, value='1')
@@ -159,7 +159,7 @@ def main_view(pwmap, pwmodify, options):
     edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
     delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
-    options = Button(frame, text="Options", command=lambda: options_menu(options))
+    options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify, tbl.get(tbl.curselection())))
 
     frame.grid(column=0, row=0)
     
@@ -174,7 +174,38 @@ def main_view(pwmap, pwmodify, options):
 
     wnd.after(250, lambda: main_update(wnd, tbl, pwmap))
     wnd.mainloop()
+def options_menu(pwmap, pwmodify, options):
+    wnd=Tk()
+    wnd.title("Options Menu")
+    frame = Frame(wnd)
+    newMaster=Label(frame, text="Change Master Password: ")
+    confirmMaster=Label(frame, text="Confirm New Master Password: ")
+    editpw = Entry(frame)
+    confirmedpw = Entry(frame)
+    done = Button(frame, text="Confirm", command=checkPass(editpw.get(), confirmedpw.get()))
+    
+    frame.grid(column=0, row=0)
+    newMaster.grid(column=1, row=1)
+    confirmMaster.grid(column=1, row=2)
+    editpw.grid(column=2, row=1)
+    confirmedpw.grid(column=2, row=2)
+    done.grid(column=2, row=3)
+    
+    wnd.mainloop()
+    
+def checkPass(pas, confir):
+    if pas.len()>0:
+        if pas==confir:
+            setPass(pas)
+            return "Password Set"
+        else:
+            return "Password and Confirmation must match"
+    else:
+        return "Password cannot be empty"
+    
+    
+    
 
 #initial_password(lambda x: print(str(x)))
-#main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
+main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
 #add_pw({"test":"test", "asdf":"jkl;", "qwerty":"uiop"},)
