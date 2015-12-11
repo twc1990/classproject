@@ -55,7 +55,13 @@
         used to generate an encryption key to protect the password database.
 
     \section {Design}
-
+        Our program is written in Python and makes use of well-tested free
+        libraries for encryption and graphical interfacing. It uses AES-256
+        encryption with the PBKDF2 key generation hashing algorithm, both
+        provided by the open-source PyCrypto module (Crypto.Cipher.AES and
+        Crypto.Protocol.KDF, respectively). The interface is rendered with
+        the Tkinter API, a wrapper around the Tk widget toolkit provided in the
+        Python standard library.
 
     \section {Project Description}
 
