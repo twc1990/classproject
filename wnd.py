@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import *
+from gen import *
 
 def quit_and(w, *fns):
     for fn in fns:
@@ -69,13 +70,23 @@ def add_pw(pwmap, modify, key):
 
     newkey = StringVar()
     newpw = StringVar()
+    newsz = StringVar()
 
     keylbl = Label(frame, text="Name: ")
     pwlbl = Label(frame, text="Password: ")
+    sizelbl = Label(frame, text="Password Size: ")
+    mustEndWith = StringVar()
+    ends = Checkbutton(frame, text='Must End with Letter')
 
+    genOpt = StringVar()
+    alphNum = Radiobutton(frame, text='Letters and Numbers Only', variable=genOpt, value='1')
+    restricted =Radiobutton(frame, text='Include !@#$%^&*(())', variable=genOpt, value='2')
+    all = Radiobutton(frame, text='All Characters', variable=genOpt, value='3')
+    
     editkey = Entry(frame)
     editpw = Entry(frame)
-    gen = Button(frame, text="Generate")
+    editsz = Entry(frame)
+    gen = Button(frame, text="Generate", command=lambda, lambda: )
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()}), lambda: print({k.get(): p.get()})))
 
     frame.grid(column=0, row=0)
@@ -85,7 +96,11 @@ def add_pw(pwmap, modify, key):
     editpw.grid(column=1, row=1)
     gen.grid(column=2, row=1)
     done.grid(column=0, row=2, columnspan=2)
-
+    
+    alphNum.grid(column=3, row=1)
+    restricted.grid(column=3, row=2)
+    all.grid(column=3, row=3)
+    ends.grid(column=4, row=0)
     wnd.mainloop()
 
 def delete_pw(pwmap, modify, key):
@@ -157,4 +172,5 @@ def main_view(pwmap, pwmodify, options):
     wnd.mainloop()
 
 #initial_password(lambda x: print(str(x)))
-#main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
+main_view({"test":"test", "asdf":"jkl;", "qwerty":"uiop"}, lambda x,y: print(x + ": " + y), lambda x: print("Options!"))
+#add_pw({"test":"test", "asdf":"jkl;", "qwerty":"uiop"},)
