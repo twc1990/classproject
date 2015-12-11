@@ -39,7 +39,10 @@ def ranAll(special, size): #generates letters, numbers, special characters
     return let
 
 def runGen(size, generator, ends):    
-    password=""
+    print(size)
+	print(generator)
+	print(ends)
+	password=""
     if ends==1:
         size=size-2
         password=firstLast()

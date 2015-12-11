@@ -75,18 +75,21 @@ def add_pw(pwmap, modify, key):
     keylbl = Label(frame, text="Name: ")
     pwlbl = Label(frame, text="Password: ")
     sizelbl = Label(frame, text="Password Size: ")
-    mustEndWith = StringVar()
-    ends = Checkbutton(frame, text='Must End with Letter')
+    endVal = StringVar()
+    ends = Checkbutton(frame, text='Must End with Letter',variable=endVal,
+	    onvalue=1, offvalue=0)
 
     genOpt = StringVar()
     alphNum = Radiobutton(frame, text='Letters and Numbers Only', variable=genOpt, value='1')
     restricted =Radiobutton(frame, text='Include !@#$%^&*(())', variable=genOpt, value='2')
     all = Radiobutton(frame, text='All Characters', variable=genOpt, value='3')
+    sizeVar = StringVar()
+    sizeBox = Combobox(frame, textvariable=sizeVar)
+    sizeBox['values'] = list(range(8, 26))
     
     editkey = Entry(frame)
     editpw = Entry(frame)
-    editsz = Entry(frame)
-    gen = Button(frame, text="Generate")
+    gen = Button(frame, text="Generate", command= runGen(sizeVar,genOpt,endVal))
     done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()}), lambda: print({k.get(): p.get()})))
 
     frame.grid(column=0, row=0)
@@ -96,11 +99,12 @@ def add_pw(pwmap, modify, key):
     editpw.grid(column=1, row=1)
     gen.grid(column=2, row=1)
     done.grid(column=0, row=2, columnspan=2)
-    
     alphNum.grid(column=3, row=1)
     restricted.grid(column=3, row=2)
     all.grid(column=3, row=3)
     ends.grid(column=4, row=0)
+    sizelbl.grid(column=4, row=1)
+    sizeBox.grid(column=4,row=2)
     wnd.mainloop()
 
 def delete_pw(pwmap, modify, key):
