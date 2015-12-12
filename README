@@ -1,0 +1,16 @@
+                                  CMSC 491-001
+                                Password Manager
+
+                      Theodore Contes       A. Connor Waters
+
+
+
+This app is written in Python 3 and depends on  Tkinter  (provided in the Python
+standard library) and PyCrypto  (the only external dependency, available through
+the pip package manager with `pip install pycrypto`).
+
+    Included are all necessary scripts (sans the above), a README, and a project
+report in TeX and PDF format.  Attached  along with this zip archive should be a
+link to a video demonstration of the application working.
+
+    Please see the project report for detailed information on the project.
