@@ -9,8 +9,8 @@ def start():
     if p == gen.MASTERPASS:
         exit()
     passwords = gen.decrTest()
-    if passwords:
-        wnd.main_view(passwords, lambda key, pw: print("Database entry: " + key + " => " + pw), None)
+    if passwords is not None:
+        wnd.main_view(passwords, gen.cryptTest, None)
     else:
         wnd.password_error(start)
 

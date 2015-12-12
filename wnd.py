@@ -34,6 +34,9 @@ def initial_password(submit):
     wnd.mainloop()
 
 def view_pw(pwmap, key):
+    if key == "":
+        return
+
     wnd = Tk()
     wnd.title("Password")
 
@@ -55,13 +58,16 @@ def view_pw(pwmap, key):
     wnd.mainloop()
 
 def edit_pw(pwmap, modify, key):
+    if key == "":
+        return
+
     wnd = Tk()
     wnd.title("Edit " + key + " Password")
 
     frame = Frame(wnd)
     edit = Entry(frame)
     edit.insert(index=0, string=pwmap[key])
-    done = Button(frame, text="Confirm", command=lambda w=wnd, k=key, p=edit: quit_and(w, modify(k, p.get()), lambda: pwmap.update({k: p.get()})))
+    done = Button(frame, text="Confirm", command=lambda w=wnd, k=key, p=edit: quit_and(w, lambda: pwmap.update({k: p.get()}), lambda: modify(pwmap)))
 
     frame.grid(column=0, row=0)
     edit.grid(column=0, row=0, columnspan=2)
@@ -93,7 +99,7 @@ def add_pw(pwmap, modify):
     editkey = Entry(frame)
     editpw = Entry(frame)
     gen = Button(frame, text="Generate", command=lambda: also(lambda: editpw.delete(0,END), lambda: editpw.insert(index=END, string=generate(int(sizeBox.get()),pattern.get(), 0))))
-    done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, modify(k.get(), p.get()), lambda: pwmap.update({k.get(): p.get()})))
+    done = Button(frame, text="Confirm", command=lambda w=wnd, k=editkey, p=editpw: quit_and(w, lambda: pwmap.update({k.get(): p.get()}), lambda: modify(pwmap)))
 
     frame.grid(column=0, row=0)
     keylbl.grid(column=0, row=0)
@@ -108,11 +114,14 @@ def add_pw(pwmap, modify):
     wnd.mainloop()
 
 def delete_pw(pwmap, modify, key):
+    if key == "":
+        return
+
     wnd = Tk()
     wnd.title("Warning")
     frame = Frame(wnd)
     lbl = Label(frame, text="Password data for " + key + " will be lost permanently.\nAre you sure you want to delete " + key + " password?")
-    yes = Button(frame, text="Confirm", command=lambda w=wnd: quit_and(w, lambda: modify(key, ""), lambda: pwmap.pop(key)))
+    yes = Button(frame, text="Confirm", command=lambda w=wnd: quit_and(w, lambda: pwmap.pop(key), lambda: modify(pwmap)))
     no = Button(frame, text="Cancel", command=lambda w=wnd: quit_and(w))
 
     frame.grid(column=0, row=0)
@@ -143,6 +152,25 @@ def main_update(window, table, passwords):
 
     window.after(250, lambda: main_update(window, table, passwords))
 
+def options_menu(pwmap, pwmodify, options):
+    wnd=Tk()
+    wnd.title("Options Menu")
+    frame = Frame(wnd)
+    newMaster=Label(frame, text="Change Master Password: ")
+    confirmMaster=Label(frame, text="Confirm New Master Password: ")
+    editpw = Entry(frame)
+    confirmedpw = Entry(frame)
+    done = Button(frame, text="Confirm", command=lambda: quit_and(lambda: checkPass(editpw.get(), confirmedpw.get())))
+    
+    frame.grid(column=0, row=0)
+    newMaster.grid(column=1, row=1)
+    confirmMaster.grid(column=1, row=2)
+    editpw.grid(column=2, row=1)
+    confirmedpw.grid(column=2, row=2)
+    done.grid(column=2, row=3)
+    
+    wnd.mainloop()
+
 def main_view(pwmap, pwmodify, options):
     wnd = Tk()
     wnd.title("Password Manager")
@@ -154,11 +182,11 @@ def main_view(pwmap, pwmodify, options):
     scl = Scrollbar(frame, orient=VERTICAL, command=tbl.yview)
     tbl.configure(yscrollcommand=scl.set)
 
-    view = Button(frame, text="View", default="active", command=lambda: view_pw(pwmap, tbl.get(tbl.curselection())))
-    edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
+    view = Button(frame, text="View", default="active", command=lambda: view_pw(pwmap, tbl.get(ACTIVE)))
+    edit = Button(frame, text="Edit", command=lambda: edit_pw(pwmap, pwmodify, tbl.get(ACTIVE)))
     add  = Button(frame, text="Add", command=lambda: add_pw(pwmap, pwmodify))
-    delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(tbl.curselection())))
-    options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify))
+    delete = Button(frame, text="Delete", command=lambda: delete_pw(pwmap, pwmodify, tbl.get(ACTIVE)))
+    options = Button(frame, text="Options", command=lambda: options_menu(pwmap, pwmodify, options))
 
     frame.grid(column=0, row=0)
     
@@ -183,25 +211,6 @@ def checkPass(pas, confir):
             return "Password and Confirmation must match"
     else:
         return "Password cannot be empty"
-
-def options_menu(pwmap, pwmodify, options):
-    wnd=Tk()
-    wnd.title("Options Menu")
-    frame = Frame(wnd)
-    newMaster=Label(frame, text="Change Master Password: ")
-    confirmMaster=Label(frame, text="Confirm New Master Password: ")
-    editpw = Entry(frame)
-    confirmedpw = Entry(frame)
-    done = Button(frame, text="Confirm", command=lambda: checkPass(editpw.get(), confirmedpw.get()))
-    
-    frame.grid(column=0, row=0)
-    newMaster.grid(column=1, row=1)
-    confirmMaster.grid(column=1, row=2)
-    editpw.grid(column=2, row=1)
-    confirmedpw.grid(column=2, row=2)
-    done.grid(column=2, row=3)
-    
-    wnd.mainloop()
 
 def password_error(func):
     wnd = Tk()

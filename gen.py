@@ -90,8 +90,9 @@ def cryptTest(accounts):
         outfile.write(ivencode)
         outfile.write(salt)
         chunk=""
-        for key in accounts:
-            chunk=key+" "+accounts[key]+"\r\n"
+        for key, pas in accounts.items():
+            print(key + " => " + pas)
+            chunk=key+" "+pas+"\r\n"
         if len(chunk) % 16 != 0:
             chunk += ' ' * (16 - len(chunk) % 16)
         outfile.write(encryptor.encrypt(chunk))
@@ -105,28 +106,29 @@ def decrTest():
     iterations = 5000
     key = ''
     #key=key.digest()
-    with open('pas.enc', 'rb') as infile:
-        iv = infile.read(16)
-        salt=infile.read(64)
-        key = PBKDF2(password, salt, dkLen=32, count=iterations)
-        decryptor = AES.new(key, AES.MODE_CBC, iv)
-        pasTest=decryptor
-        with open('test.enc', 'rb') as testfile:
-            while True:
-                test=testfile.read(chunksize)
-                if len(test)==0:
-                    break
-                try:
-                    m=pasTest.decrypt(test).decode()
-                    print (m)
-                    if m==passPhrase:
-                        testPass=True
-                except UnicodeDecodeError:
-                    return None
-        if testPass:
-            with open('testing.txt', 'rb') as outfile:
+    try:
+        with open('pas.enc', 'rb') as infile:
+            iv = infile.read(16)
+            salt=infile.read(64)
+            key = PBKDF2(password, salt, dkLen=32, count=iterations)
+            decryptor = AES.new(key, AES.MODE_CBC, iv)
+            pasTest=decryptor
+            with open('test.enc', 'rb') as testfile:
                 while True:
-                    print (testPass)
+                    test=testfile.read(chunksize)
+                    if len(test)==0:
+                        break
+                    try:
+                        m=pasTest.decrypt(test).decode()
+                        print (m)
+                        if m==passPhrase:
+                            testPass=True
+                    except UnicodeDecodeError:
+                        print("Unicode Error")
+                        return None
+            if testPass:
+                print("Password Correct!")
+                while True:
                     chunk = infile.read(chunksize)
                     if len(chunk) == 0:
                         break
@@ -136,10 +138,16 @@ def decrTest():
                     dic={}
                     for x in allsep:
                         v=x.split()
-                        dic[v[0]]=v[1]
+                        print(v[0] + " => " + v[1])
+                        dic.update({v[0]: v[1]})
                 return dic
-        else:
-            return None
+            else:
+                print("Password Incorrect")
+                return None
+    except FileNotFoundError:
+        print("File Not Found")
+        return dict()
+
 def crypt():
     password=MASTERPASS
     chunksize=64*1024
