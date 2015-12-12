@@ -13,15 +13,6 @@ def setPass(x):
     global MASTERPASS
     MASTERPASS=x
 
-
-def firstLast(): #only generates letters
-    tell=random.randint(1,2)
-    if tell==1:
-        let+=chr(random.randint(65,90))
-    elif tell==2:
-        let+=chr(random.randint(97,122))
-    return let
-
 def ranAlphNum(size): #generates letters and numbers
     let = ''
     for x in range(size):
@@ -71,7 +62,6 @@ def runGen(size, generator, ends):
     print(password)
     return password
             
-            
 def cryptTest(accounts):
     password=MASTERPASS
     chunksize=64*1024
@@ -92,7 +82,7 @@ def cryptTest(accounts):
         chunk=""
         for key, pas in accounts.items():
             print(key + " => " + pas)
-            chunk=key+" "+pas+"\r\n"
+            chunk+=key+"\t"+pas+"\n"
         if len(chunk) % 16 != 0:
             chunk += ' ' * (16 - len(chunk) % 16)
         outfile.write(encryptor.encrypt(chunk))
@@ -128,18 +118,21 @@ def decrTest():
                         return None
             if testPass:
                 print("Password Correct!")
+                allstring=""
                 while True:
                     chunk = infile.read(chunksize)
                     if len(chunk) == 0:
                         break
-                    all=decryptor.decrypt(chunk).decode().strip()
-                    allsep=all.split("\r\n")
-                    leng=int(len(allsep)/2)
-                    dic={}
-                    for x in allsep:
-                        v=x.split()
-                        print(v[0] + " => " + v[1])
-                        dic.update({v[0]: v[1]})
+                    allstring+=decryptor.decrypt(chunk).decode().strip()
+                    print(allstring)
+                print(allstring)
+                allsep=allstring.split("\n")
+                print(allsep)
+                dic={}
+                for x in allsep:
+                    v=x.split("\t")
+                    print(v[0] + " => " + v[1])
+                    dic.update({v[0]: v[1]})
                 return dic
             else:
                 print("Password Incorrect")
@@ -147,29 +140,3 @@ def decrTest():
     except FileNotFoundError:
         print("File Not Found")
         return dict()
-
-def crypt():
-    password=MASTERPASS
-    chunksize=64*1024
-    iv = ''.join(chr(random.randint(0, 0xF)) for i in range(16))
-    iterations = 5000
-    key = ''
-    salt = os.urandom(64)
-    key = PBKDF2(password, salt, dkLen=32, count=iterations)
-    #key=key.digest()
-    encryptor = AES.new(key, AES.MODE_CBC, iv)
-    testEnc=encryptor
-    with open('test.enc', 'wb') as testFile:
-        testFile.write(encryptor.encrypt(passPhrase))
-    with open('pas.txt', 'rb') as infile:
-        with open('pas.enc', 'wb') as outfile:
-            ivencode = iv.encode('utf-8')
-            outfile.write(ivencode)
-            outfile.write(salt)
-            while True:
-                chunk = infile.read(chunksize)
-                if len(chunk) == 0:
-                    break
-                elif len(chunk) % 16 != 0:
-                    chunk += ' '.encode('utf-8') * (16 - len(chunk) % 16)
-                outfile.write(encryptor.encrypt(chunk))
