@@ -10,8 +10,9 @@ MASTERPASS=""
 passPhrase="This is a very long sentence that serves only to tests if the algorithms are using )*&0912ethe correct password 198026813265 sdalku1268435362 fasd6aoiyonmLKHAslfb.wek8"
 passPhrase+=' '* (16 - len(passPhrase) % 16)
 def setPass(x):
-    MASTERPASS=x;
-    print (MASTERPASS)
+    global MASTERPASS
+    MASTERPASS=x
+
 
 def firstLast(): #only generates letters
     tell=random.randint(1,2)
@@ -98,6 +99,7 @@ def cryptTest(accounts):
 def decrTest():
     testPass=False
     password=MASTERPASS
+    print(password+"4444")
     print (password)
     chunksize=24*1024
     iterations = 5000
@@ -115,12 +117,13 @@ def decrTest():
                 if len(test)==0:
                     break
                 m=pasTest.decrypt(test).decode()
+                print (m)
                 if m==passPhrase:
                     testPass=True
-        print(testPass)
         if testPass:
             with open('testing.txt', 'rb') as outfile:
                 while True:
+                    print (testPass)
                     chunk = infile.read(chunksize)
                     if len(chunk) == 0:
                         break
