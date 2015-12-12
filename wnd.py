@@ -203,8 +203,12 @@ def options_menu(pwmap, pwmodify, options):
     
     wnd.mainloop()
 
-def password_error():
-    w = Tk()
-    w.title("Error!")
-    Label(w, text="You have entered an incorrect password.").grid(column=0, row=0)
-    Button(w, text="Retry").grid(column=0, row=0)
+def password_error(func):
+    wnd = Tk()
+    wnd.title("Error!")
+    f = Frame(wnd)
+    Label(f, text="You have entered an incorrect password.").grid(column=0, row=0, columnspan=2)
+    b = Button(f, text="Retry", command=lambda w=wnd: also(lambda: w.destroy(), func)).grid(column=0, row=1)
+    q = Button(f, text="Quit", command=lambda w=wnd: w.destroy()).grid(column=1, row=1)
+    f.grid(column=0, row=0)
+    wnd.mainloop()

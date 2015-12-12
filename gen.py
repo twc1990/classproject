@@ -116,10 +116,13 @@ def decrTest():
                 test=testfile.read(chunksize)
                 if len(test)==0:
                     break
-                m=pasTest.decrypt(test).decode()
-                print (m)
-                if m==passPhrase:
-                    testPass=True
+                try:
+                    m=pasTest.decrypt(test).decode()
+                    print (m)
+                    if m==passPhrase:
+                        testPass=True
+                except UnicodeDecodeError:
+                    return None
         if testPass:
             with open('testing.txt', 'rb') as outfile:
                 while True:

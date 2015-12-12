@@ -3,11 +3,15 @@
 import gen
 import wnd
 
-while(True):
+def start():
+    p = gen.MASTERPASS
     wnd.initial_password(gen.setPass)
+    if p == gen.MASTERPASS:
+        exit()
     passwords = gen.decrTest()
     if passwords:
-        break
-    wnd.password_error()
+        wnd.main_view(passwords, lambda key, pw: print("Database entry: " + key + " => " + pw), None)
+    else:
+        wnd.password_error(start)
 
-wnd.main_view(passwords, lambda key, pw: print("Database entry: " + key + " => " + pw), None)
+start()
